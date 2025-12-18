@@ -4,6 +4,7 @@ import {
   createService,
   updateService,
   deleteService,
+  getServiceById,
 } from "../controllers/services.controller.js";
 
 import { verifyJWT, verifyRole } from "../middlewares/verifyJWT.js";
@@ -12,6 +13,7 @@ const router = express.Router();
 
 // Public route
 router.get("/", getServices);
+router.get("/:id", getServiceById);
 
 // Admin only
 router.post("/", verifyJWT, verifyRole(["Admin"]), createService);

@@ -12,6 +12,20 @@ export const getServices = async (req, res) => {
   }
 };
 
+export const getServiceById = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const service = await getDB()
+      .collection("services")
+      .findOne({ _id: new ObjectId(id) });
+    if (!service) return res.status(404).json({ message: "Service not found" });
+    res.json(service);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to fetch service" });
+  }
+};
+
 // Create service (Admin only)
 export const createService = async (req, res) => {
   try {
