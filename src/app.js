@@ -7,7 +7,24 @@ import usersRoutes from './routes/users.route.js'
 
 const app = express();
 
-app.use(cors());
+const allowedOrigins = [
+  "https://tyle-decor.web.app", // your Firebase frontend
+  "http://localhost:5173", // local frontend during development
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("CORS policy: Not allowed by CORS"));
+      }
+    },
+    methods: ["GET", "POST", "PATCH", "DELETE"],
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 
