@@ -7,26 +7,24 @@ import usersRoutes from "./routes/users.route.js";
 
 const app = express();
 
+
 const allowedOrigins = ["https://tyle-decor.web.app", "http://localhost:5173"];
 
-// Apply CORS globally
-app.use((req, res, next) => {
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
-    res.setHeader("Access-Control-Allow-Origin", origin);
-  }
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PATCH, DELETE, OPTIONS"
-  );
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.setHeader("Access-Control-Allow-Credentials", "true");
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true); // allow non-browser requests
+    if (allowedOrigins.indexOf(origin) === -1) {
+      return callback(new Error("Not allowed by CORS"), false);
+    }
+    return callback(null, true);
+  },
+  methods: ["GET", "POST", "PATCH", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+};
 
-  // Handle preflight requests
-  if (req.method === "OPTIONS") return res.sendStatus(200);
-
-  next();
-});
+// Apply CORS to all routes
+app.use(cors(corsOptions));
 
 app.use(express.json());
 
