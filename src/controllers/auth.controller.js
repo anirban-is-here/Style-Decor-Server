@@ -24,6 +24,38 @@ export const loginUser = async (req, res) => {
   }
 };
 
+export const loginWithGoogle = async (req, res) => {
+  const { name, email } = req.body;
+
+  try {
+    const users = getDB().collection("users");
+
+    // check existing user
+    let user = await users.findOne({ email });
+
+    // create new user if not exists
+    if (!user) {
+      user = {
+        name,
+        email,
+        role: "User", // default
+      };
+
+      await users.insertOne(user);
+    }
+
+    const token = jwt.sign(
+      { id: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.TOKEN_EXPIRES }
+    );
+
+    res.json({ token });
+  } catch (err) {
+    res.status(500).json({ message: "Google login failed" });
+  }
+};
+
 export const getJWT = async (req, res) => {
   const { email } = req.body;
   if (!email) return res.status(400).json({ message: "Email required" });
