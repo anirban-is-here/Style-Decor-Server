@@ -14,15 +14,10 @@ const allowedOrigins = [
 
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("CORS policy: Not allowed by CORS"));
-      }
-    },
+    origin: "https://tyle-decor.web.app",
     methods: ["GET", "POST", "PATCH", "DELETE"],
-    credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true, // optional, if you send cookies or auth headers
   })
 );
 app.use(express.json());
