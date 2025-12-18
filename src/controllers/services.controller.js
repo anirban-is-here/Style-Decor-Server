@@ -8,6 +8,7 @@ export const getServices = async (req, res) => {
     const services = await getDB().collection("services").find({}).toArray();
     res.json(services);
   } catch (err) {
+      console.error(err)
     res.status(500).json({ message: "Failed to fetch services" });
   }
 };
@@ -22,7 +23,9 @@ export const getServiceById = async (req, res) => {
     res.json(service);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Failed to fetch service" });
+    res
+      .status(500)
+      .json({ message: "Failed to fetch service", error: err.message });
   }
 };
 
