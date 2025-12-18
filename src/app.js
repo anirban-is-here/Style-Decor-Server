@@ -10,21 +10,12 @@ const app = express();
 
 const allowedOrigins = ["https://tyle-decor.web.app", "http://localhost:5173"];
 
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (!origin) return callback(null, true); // allow non-browser requests
-    if (allowedOrigins.indexOf(origin) === -1) {
-      return callback(new Error("Not allowed by CORS"), false);
-    }
-    return callback(null, true);
-  },
-  methods: ["GET", "POST", "PATCH", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true,
-};
+app.use(cors({
+    origin: allowedOrigins,
+    credentials: true,
+}))
 
-// Apply CORS to all routes
-app.use(cors(corsOptions));
+
 
 app.use(express.json());
 
